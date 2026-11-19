@@ -3,6 +3,7 @@ from enum import Enum
 from .boolean_csv import BooleanRegulatoryCSV
 from . co_expression_csv import CoExpressionRegulatoryCSV
 from .target_regulator_csv import TargetRegulatorRegulatoryCSV
+from .text_mining_csv import TextMiningRegulatoryCSV
 from .cobra_model import CobraModel
 from .reframed_model import ReframedModel
 from .json import JSON
@@ -19,6 +20,7 @@ class Engines(Enum):
     BooleanRegulatoryCSV = BooleanRegulatoryCSV
     CoExpressionRegulatoryCSV = CoExpressionRegulatoryCSV
     TargetRegulatorRegulatoryCSV = TargetRegulatorRegulatoryCSV
+    TextMiningRegulatoryCSV = TextMiningRegulatoryCSV
     RegulatorySBML = RegulatorySBML
     MetabolicSBML = MetabolicSBML
     CobraModel = CobraModel
