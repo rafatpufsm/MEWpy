@@ -382,6 +382,28 @@ class TestGERMModel(unittest.TestCase):
         sol = isingle_regulator_deletion(model, regulators=list(model.regulators.keys())[0:10])
         self.assertGreater(len(sol), 0)
 
+    def test_srfba_unique_constraint_ids(self):
+        """
+        Regression: every SRFBA constraint row must reach the solver under a unique id.
+        Ids were built as str(i + j), which collided across constraints, so the solver
+        silently replaced earlier rows and GPR/regulatory rules were lost.
+        """
+        from mewpy.io import read_model, Reader, Engines
+        from mewpy.germ.analysis import SRFBA
+
+        metabolic_reader = Reader(Engines.MetabolicSBML, SAMPLE_MODEL)
+        regulatory_reader = Reader(Engines.BooleanRegulatoryCSV,
+                                   SAMPLE_REG_MODEL,
+                                   sep=',',
+                                   id_col=0,
+                                   rule_col=1)
+        model = read_model(regulatory_reader, metabolic_reader)
+        model.objective = {'r11': 1}
+        model.get('pH').coefficients = (0, 14)
+
+        constr_ids = SRFBA(model).build().solver.constr_ids
+        self.assertEqual(len(constr_ids), len(set(constr_ids)))
+
     #@pytest.mark.xfail
     def test_analysis_expression(self):
         """
