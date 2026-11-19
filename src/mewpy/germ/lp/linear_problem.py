@@ -281,7 +281,9 @@ class LinearProblem:
                 # Using mewpy/reframed solver interface ...
                 for j, (coef, lb, ub) in constraint.items():
 
-                    cnt_id = str(i + j)
+                    # unique id per constraint row: str(i + j) collided across constraints
+                    # (e.g. 5+2 == 7+0), making the solver silently replace earlier rows
+                    cnt_id = f'{i}_{j}'
 
                     if lb == ub:
                         rhs = lb
